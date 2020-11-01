@@ -1,0 +1,16 @@
+{
+  "name": "ThermoProto",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.3"
+  },
+  "authoer": "Nicole Kulakowski",
+  "engines":{
+    "node": "6.9.4",
+    "npm": "4.1.2"
+  }
+
+}
