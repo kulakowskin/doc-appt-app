@@ -4,74 +4,32 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
   </head>
-  <body ng-app="ThermostatPrototype">
-    <div class="container">
-        <div class="row">
-        <h1>ThermoHome</h1>
-        </div>
-        <div class="column">
-            <div class="left-side">
-                <label class="controllerLabel">Set To</label>
-                <p>
-                <div class="control">
-                    <button id="increaseTemp" class="arrow up"></button>
-                    <span id="setTemp">72&degF</span>
-                    <button id="decreaseTemp" class="arrow down"></button>
-                </div>
-                </p>
-                <label class="outsideLabel">Outside</label>
-                <div class="outsideTemp temperature row">
-                    75&degF
-                </div>
-                <label class="indoorsLabel">Indoors</label>
-                <div id="indoorTemp" class="indoorTemp temperature row">
-                    68&degF
-                </div>
-            </div>
-        </div>
-        <!-- Error Modal -->
-        <div id="errModal" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>Select a room to adjust temperature.</p>
-            </div>
-
-        </div>
-        <div class="column">
-            <div class="right-side">
-                <button id="bedroom1" class="roomButton">Bedroom 1
-                    <p id="bedroom1Temp">77&degF</p>
-                </button>
-
-                <button id="office" class="roomButton">Office
-                    <p id="officeTemp">56&degF</p>
-                </button>
-                <button id="bedroom2" class="roomButton">Bedroom 2
-                    <p id="bedroom2Temp">45&degF</p>
-                </button>
-                <button id="hallway" class="roomButton">Hallway
-                    <!--<p id="hallwayTemp">45&degF</p>-->
-                </button>
-                <button id="master" class="roomButton">Master Bedroom
-                    <p id="masterTemp">82&degF</p>
-                </button>
-                <button id="livingRoom" class="roomButton">Living Space
-                    <p id="livingRoomTemp">102&degF</p>
-                </button>
-            </div>
-        </div>
-        <!-- Calendly inline widget begin -->
-        <div class="calendly-inline-widget" data-url="https://calendly.com/appointmentmaker" style="min-width:320px;height:630px;"></div>
-        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
-        <!-- Calendly inline widget end -->
+  <div class="topnav">
+      <a class="active" href="index.html" onclick="makeActive">Schedule</a>
+      <a href="ViewAppointments.html" onclick="makeActive">View Appointments</a>
+      <a href="Account.html" onclick="makeActive">Account</a>
+      <a href="#logout" onclick="makeActive">Logout</a>
+  </div>
+  <body ng-app="AppointmentMaker">
+    <div>
+        <!-- Calendly link widget begin -->
+        <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+        <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
+        <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/appointmentmaker/dr-dre'});return false;">Schedule time with Dr. Dre</a>
+        <!-- Calendly link widget end -->
+        <!-- Calendly link widget begin -->
+        <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+        <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
+        <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/appointmentmaker/dr-fauci'});return false;">Schedule time with Dr. Dre</a>
+        <!-- Calendly link widget end -->
+        <!-- Calendly link widget begin -->
+        <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+        <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
+        <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/appointmentmaker/dr-doolittle'});return false;">Schedule time with Dr. Dre</a>
+        <!-- Calendly link widget end -->
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
     <script src="https://code.angularjs.org/1.4.3/angular.js"></script>
     <script src="app.js"></script>
-    <script src="temperatureController.js"></script>
-    <script src="listingFactory.js"></script>
+    <script src="controller.js"></script>
   </body>
 </html>
