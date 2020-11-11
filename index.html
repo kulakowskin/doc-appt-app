@@ -3,33 +3,21 @@
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
+      <script src="https://code.angularjs.org/1.4.3/angular.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="app.js"></script>
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+      <script src="db.js"></script>
+      <script src="controller.js"></script>
   </head>
   <div class="topnav">
-      <a class="active" href="index.html" onclick="makeActive">Schedule</a>
-      <a href="ViewAppointments.html" onclick="makeActive">View Appointments</a>
-      <a href="Account.html" onclick="makeActive">Account</a>
-      <a href="#logout" onclick="makeActive">Logout</a>
+      <a href="" class="active" onclick="makeActive('schedule.html',this)">Schedule</a>
+      <a href="" onclick="makeActive('ViewAppointments.html',this)">View Appointments</a>
+      <a href="" onclick="makeActive('Account.html',this)">Account</a>
+      <a id="logoutbtn" href="index.html" onclick="logout" style="display: none">Logout</a>
   </div>
   <body ng-app="AppointmentMaker">
-    <div>
-        <!-- Calendly link widget begin -->
-        <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-        <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
-        <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/appointmentmaker/dr-dre'});return false;">Schedule time with Dr. Dre</a>
-        <!-- Calendly link widget end -->
-        <!-- Calendly link widget begin -->
-        <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-        <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
-        <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/appointmentmaker/dr-fauci'});return false;">Schedule time with Dr. Dre</a>
-        <!-- Calendly link widget end -->
-        <!-- Calendly link widget begin -->
-        <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-        <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
-        <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/appointmentmaker/dr-doolittle'});return false;">Schedule time with Dr. Dre</a>
-        <!-- Calendly link widget end -->
-    </div>
-    <script src="https://code.angularjs.org/1.4.3/angular.js"></script>
-    <script src="app.js"></script>
-    <script src="controller.js"></script>
+
+    <div id="tab"></div>
   </body>
 </html>
