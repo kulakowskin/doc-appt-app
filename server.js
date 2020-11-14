@@ -74,27 +74,32 @@ client.connect( err => {
     // this doesn't create a new user but rather updates an existing one by the user name
     // a request looks like this: `https://nodeserver.com/username23` plus the associated JSON data sent in
     // the `body` property of the PUT request
-    app.put("/:username", (req, res) => {
-        collection.find({ username: req.params.username }).toArray((err, docs) => {
-            if (err) {
-                // if and error occurs in finding a user to update
-                res.send("Error in PUT req.");
-            } else {
-                collection.updateOne(
-                    { username: req.params.username }, // if the username is the same, update the user
-                    { $set: { ...req.body, username: req.params.username } }, // update user data
-                    (err, r) => {
-                        if (err) {
-                            // if error occurs in actually updating the data in the database
-                            console.log("Error in updating database information");
-                        } else {
-                            // everything works! (hopefully)
-                            res.send("Updated successfully");
-                        }
-                    }
-                );
-            }
-        });
+    // app.put("/:username", (req, res) => {
+    //     collection.find({ username: req.params.username }).toArray((err, docs) => {
+    //         if (err) {
+    //             // if and error occurs in finding a user to update
+    //             res.send("Error in PUT req.");
+    //         } else {
+    //             collection.updateOne(
+    //                 { username: req.params.username }, // if the username is the same, update the user
+    //                 {
+    //                     $set: {
+    //                         user: ,
+    //                     },
+    //                 },
+    //                 (req.body, // update user data
+    //                 (err, r) => {
+    //                     if (err) {
+    //                         // if error occurs in actually updating the data in the database
+    //                         console.log("Error in updating database information");
+    //                     } else {
+    //                         // everything works! (hopefully)
+    //                         res.send(r.result);
+    //                     }
+    //                 }
+    //             ));
+    //         }
+    //     });
 
         // if someone goes to base route, send back they are home.
         app.get("/", (req, res) => {
