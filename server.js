@@ -61,13 +61,11 @@ client.connect( err => {
     // Example request: https://mynodeserver.com/myNEWusername
     app.post("/:username", (req, res) => {
         // inserts a new document in the database (collection)
-        collection.insertOne(
-            { ...req.body, username: req.params.username }, // this is one object to insert. `requst.params` gets the url req parameters
-            (err, r) => {
+        collection.insertOne( req.body, (err, r) => {
                 if (err) {
                     res.send("Error in POST req.");
                 } else {
-                    res.send("Information inserted");
+                    res.send(r.result);
                 }
             }
         );

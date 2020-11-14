@@ -1,6 +1,6 @@
 //import {Calendar} from "./node_modules/@fullcalendar/core";
 
-import * as FullCalendar from "fullcalendar";
+//import * as FullCalendar from "fullcalendar";
 
 function makeActive(tab_name, element) {
     try
@@ -113,27 +113,27 @@ function logout() {
 }
 
 function loadCalendar() {
-    var calendarEl = document.getElementById("calendar");
-    var calendar = new FullCalendar.Calendar(calendarEl,
-        {
-            timezone: 'local',
-            events: [
-            {
-                title: 'new event',
-                start: '2020-11-15'
-            },
-            ],
-            color: 'lightBlue',
-            textColor: 'gray',
-            header: {
-            left: 'title',
-                center: '',
-                right: 'today prev,next'
-            },
-            buttonIcons: {
-                prev: 'left-single-arrow',
-                    next: 'right-single-arrow',
-            },
-        });
-    calendar.render();
+    // var calendarEl = document.getElementById("calendar");
+    // var calendar = new FullCalendar.Calendar(calendarEl,
+    //     {
+    //         timezone: 'local',
+    //         events: [
+    //         {
+    //             title: 'new event',
+    //             start: '2020-11-15'
+    //         },
+    //         ],
+    //         color: 'lightBlue',
+    //         textColor: 'gray',
+    //         header: {
+    //         left: 'title',
+    //             center: '',
+    //             right: 'today prev,next'
+    //         },
+    //         buttonIcons: {
+    //             prev: 'left-single-arrow',
+    //                 next: 'right-single-arrow',
+    //         },
+    //     });
+    // calendar.render();
 }
