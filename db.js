@@ -11,3 +11,18 @@ function getUser(username, callback) {
         });
 }
 
+function createUser() {
+    var username = document.getElementById("email").value;
+    const user = {
+        username: username,
+        first: document.getElementById("first").value,
+        last: document.getElementById("last").value,
+        password: document.getElementById("password").value,
+    };
+    axios.post(api_url+"/"+encodeURIComponent(username), user)
+        .then( res => {
+            console.log(res.data);
+            login();
+            });
+}
+

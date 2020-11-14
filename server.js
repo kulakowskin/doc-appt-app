@@ -20,8 +20,17 @@ app.get("/", function(req,res){
     res.render("index");
 });
 
-app.use(require("cors")()); // allow Cross-domain requests
+
+var cors = require('cors');
 app.use(require('body-parser').json()); // When someone sends something to the server, we can recieve it in JSON format
+//enables cors
+app.use(cors({
+    'allowedHeaders': ['sessionId', 'Content-Type'],
+    'exposedHeaders': ['sessionId'],
+    'origin': '*',
+    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'preflightContinue': false
+}));
 
 const client = new MongoClient(uri, { useNewUrlParser: true });
 

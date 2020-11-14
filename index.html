@@ -7,14 +7,17 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
       <script src="app.js"></script>
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css" rel="stylesheet" />
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js"></script>
       <script src="db.js"></script>
-      <script src="controller.js"></script>
+      <script typw="module" src="controller.mjs"></script>
   </head>
   <div class="topnav">
-      <a href="" class="active" onclick="makeActive('schedule.html',this)">Schedule</a>
-      <a href="" onclick="makeActive('ViewAppointments.html',this)">View Appointments</a>
-      <a href="" onclick="makeActive('Account.html',this)">Account</a>
-      <a id="logoutbtn" href="index.html" onclick="logout" style="display: none">Logout</a>
+      <a id="scheduletab" class="loggedin active" href="" onclick="makeActive('schedule.html',this)">Schedule New Appointment</a>
+      <a class="loggedin" href="" onclick="makeActive('ViewAppointments.html',this)">View Appointments</a>
+      <!--a class="loggedin" href="" onclick="makeActive('Account.html',this)">Account</a-->
+      <a class="loggedin" id="logoutbtn" href="" onclick="logout()">Logout</a>
   </div>
   <body ng-app="AppointmentMaker">
 

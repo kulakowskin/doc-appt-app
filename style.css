@@ -67,3 +67,12 @@ h1{
 #error {
     color: #cd0000;
 }
+
+.loggedin {
+    display: none;
+}
+
+#calendar {
+    max-width: 1100px;
+    margin: 40px auto;
+}
