@@ -1,13 +1,22 @@
 
-const api_url = "http://localhost:8080";
+const api_url = "http://localhost:8080/api/";
 
 
 function getUser(username, callback) {
-    axios.get(api_url+"/"+encodeURIComponent(username))
+    axios.get(api_url+"users/"+encodeURIComponent(username))
         .then(res => {
-            const user = res.data[0];
-            console.log(user);
+            const user = res.data;
+            console.log(res.data);
             callback(user);
+        });
+}
+
+function getAllProviders(callback){
+    axios.get(api_url+"users/providers")
+        .then(res => {
+            const providers = res.data;
+            console.log(providers);
+            callback(providers);
         });
 }
 
@@ -18,8 +27,9 @@ function createUser() {
         first: document.getElementById("first").value,
         last: document.getElementById("last").value,
         password: document.getElementById("password").value,
+        provider: document.getElementById("provider").value
     };
-    axios.post(api_url+"/"+encodeURIComponent(username), user)
+    axios.post(api_url+"users/", user)
         .then( res => {
             console.log(res.data);
             login();

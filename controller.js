@@ -1,6 +1,3 @@
-//import {Calendar} from "./node_modules/@fullcalendar/core";
-
-//import * as FullCalendar from "fullcalendar";
 
 function makeActive(tab_name, element) {
     try
@@ -13,11 +10,15 @@ function makeActive(tab_name, element) {
     }
     element.classList.add("active");
     jQuery(document).ready(function () {
-        jQuery("#tab").load(tab_name);
+        jQuery("#tab").load(tab_name, function() {
+            if(tab_name === "schedule.html") {
+                loadCalendar();
+                populateProviderDropdown();
+            }
+        });
+
     });
-    if(tab_name === "schedule.html") {
-        loadCalendar();
-    }
+
 }
 
 var currentUser = "";
@@ -28,9 +29,7 @@ function setCookie(user) {
 }
 
 function getCookie(){
-    return document.cookie.split(';').some(c => {
-        return c.trim().startsWith('user=');
-    });
+    return !(document.cookie === "user=");
 }
 
 if(isLoggedIn()){
@@ -52,6 +51,7 @@ else {
 
 function isLoggedIn() {
     var res = getCookie();
+    console.log("cookie: ",res);
     return res;
 }
 
@@ -62,7 +62,7 @@ function createAccount(){
 
 }
 
-function login(){
+async function login(){
     // call to DB to verify password matches user
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
@@ -88,8 +88,8 @@ function login(){
     });
 }
 
-function verifyPassword(username, pword, callback) {
-    getUser(username, function(user){
+async function verifyPassword(username, pword, callback) {
+    await getUser(username, function(user){
         if (user.password === pword) {
             callback(true);
         }
@@ -113,27 +113,42 @@ function logout() {
 }
 
 function loadCalendar() {
-    // var calendarEl = document.getElementById("calendar");
-    // var calendar = new FullCalendar.Calendar(calendarEl,
-    //     {
-    //         timezone: 'local',
-    //         events: [
-    //         {
-    //             title: 'new event',
-    //             start: '2020-11-15'
-    //         },
-    //         ],
-    //         color: 'lightBlue',
-    //         textColor: 'gray',
-    //         header: {
-    //         left: 'title',
-    //             center: '',
-    //             right: 'today prev,next'
-    //         },
-    //         buttonIcons: {
-    //             prev: 'left-single-arrow',
-    //                 next: 'right-single-arrow',
-    //         },
-    //     });
-    // calendar.render();
+    var calendarEl = document.getElementById("calendar");
+    var calendar = new FullCalendar.Calendar(calendarEl,
+        {
+            timezone: 'local',
+            events: [
+            {
+                title: 'new event',
+                start: '2020-11-15'
+            },
+            ],
+            color: 'lightBlue',
+            textColor: 'gray',
+            header: {
+            left: 'title',
+                center: '',
+                right: 'today prev,next'
+            },
+            buttonIcons: {
+                prev: 'left-single-arrow',
+                    next: 'right-single-arrow',
+            },
+            schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+            initialView: 'dayGridMonth',
+            dateClick: function(info) {
+                alert('Clicked on: ' + info.dateStr);
+                alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+                alert('Current view: ' + info.view.type);
+                // change the day's background color just for fun
+                info.dayEl.style.backgroundColor = 'red';
+            }
+        }).render();
+}
+
+function populateProviderDropdown(){
+    var dropdown = document.getElementById("doctors");
+    getAllProviders(function(providers){
+        providers.forEach(p => dropdown.innerHTML += "<option value='"+p.last+"'>Dr. "+p.last+"</option>");
+    });
 }
