@@ -12,7 +12,7 @@ function makeActive(tab_name, element) {
     jQuery(document).ready(function () {
         jQuery("#tab").load(tab_name, function() {
             if(tab_name === "schedule.html") {
-                loadCalendar();
+                loadCalendar(events);
                 populateProviderDropdown();
             }
         });
@@ -22,6 +22,7 @@ function makeActive(tab_name, element) {
 }
 
 var currentUser = "";
+var events = [];
 
 //loggedin or loggedout
 function setCookie(user) {
@@ -112,17 +113,12 @@ function logout() {
     });
 }
 
-function loadCalendar() {
+function loadCalendar(events) {
     var calendarEl = document.getElementById("calendar");
     var calendar = new FullCalendar.Calendar(calendarEl,
         {
             timezone: 'local',
-            events: [
-            {
-                title: 'new event',
-                start: '2020-11-15'
-            },
-            ],
+            events: events,
             color: 'lightBlue',
             textColor: 'gray',
             header: {
@@ -149,6 +145,25 @@ function loadCalendar() {
 function populateProviderDropdown(){
     var dropdown = document.getElementById("doctors");
     getAllProviders(function(providers){
-        providers.forEach(p => dropdown.innerHTML += "<option value='"+p.last+"'>Dr. "+p.last+"</option>");
+        dropdown.innerHTML += "<option value='select'>Select doctor...</option>";
+        providers.forEach(p => dropdown.innerHTML += "<option value='"+p.username+"'>Dr. "+p.last+"</option>");
     });
+}
+
+function pullProviderCalendar(){
+
+    var p_events = [];
+    var p_email = document.getElementById("doctors").value;
+    getUser(p_email, function(user){
+        getSchedule(user.scheduleid, function(sched) {
+            sched.appointments.forEach(a => {
+                p_events.push({
+                    title: 'Available',
+                    start: new Date(a.date)
+                })
+            });
+            loadCalendar(p_events);
+        });
+    });
+
 }

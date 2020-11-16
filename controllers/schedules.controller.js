@@ -23,7 +23,7 @@ exports.create = (req, res) => {
         });
 };
 
-// Retrieve all Scheduless from the database.
+// Retrieve all Schedules from the database.
 exports.findAll = (req, res) => {
         Schedule.find()
             .then(data => {
@@ -39,8 +39,8 @@ exports.findAll = (req, res) => {
 
 // Find a single User with an id
 exports.findOne = (req, res) => {
-        const id = req.params.id;
 
+        const id = req.params.id;
         Schedule.findById(id)
             .then(data => {
                 if (!data)

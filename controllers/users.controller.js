@@ -9,8 +9,36 @@ exports.create = (req, res) => {
         res.status(400).send({ message: "Content can not be empty!" });
         return;
     }
-    console.log("in create function");
-    const schedule = new Schedule();
+
+    var isProvider = req.body.provider;
+    var appts = [];
+    var schedule = null;
+    var today = new Date();
+    today.setMinutes(0);
+    today.setSeconds(0);
+    var date = today;
+
+    if(isProvider){
+        // Create a business day schedule for providers
+        for(var i = 0; i<31;i++){  // Can schedule appt over next 30 days
+            for(var j = 9; j<17; j++) {  // Hours 9-4
+                date = new Date(date.setDate(today.getDate() + i));
+                date.setHours(j);
+                appts.push(
+                    {
+                        date: date,
+                        with: ""
+                    },
+                )
+            }
+        }
+        schedule = new Schedule({
+            appointments: appts
+        });
+    }
+    else{
+        schedule = new Schedule();
+    }
 
     // Create a User
     const user = new User({
@@ -18,8 +46,8 @@ exports.create = (req, res) => {
         password: req.body.password,
         first: req.body.first,
         last: req.body.last,
-        scheduleid: schedule.id,
-        provider: req.body.provider
+        scheduleid: schedule._id.toString(),
+        provider: isProvider
     });
     // Save user in the database
     user
@@ -52,7 +80,6 @@ exports.findAll = (req, res) => {
         User.find()
             .then(data => {
                 res.send(data).status(200);
-                console.log(data);
             })
             .catch(err => {
                 res.status(500).send({
