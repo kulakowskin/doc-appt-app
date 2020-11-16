@@ -28,8 +28,7 @@ exports.create = (req, res) => {
                     {
                         date: date,
                         with: ""
-                    },
-                );
+                    });
             }
         }
         schedule = new Schedule({
