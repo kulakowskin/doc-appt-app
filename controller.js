@@ -132,14 +132,45 @@ function loadCalendar(events) {
             },
             schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
             initialView: 'dayGridMonth',
-            dateClick: function(info) {
-                alert('Clicked on: ' + info.dateStr);
-                alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-                alert('Current view: ' + info.view.type);
-                // change the day's background color just for fun
-                info.dayEl.style.backgroundColor = 'red';
+            eventClick: function(info) {
+                info.jsEvent.preventDefault();
+                loadEventModal(info.event);
+                // alert('Clicked on: ' + info.dateStr);
+                // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+                // alert('Current view: ' + info.view.type);
+                // // change the day's background color just for fun
+                // info.dayEl.style.backgroundColor = 'red';
             }
         }).render();
+}
+
+function loadEventModal(event){
+    var modal = document.getElementById("modal");
+
+    var span = document.getElementsByClassName("close");
+
+    var select = document.getElementById("doctors");
+    var dr = select.options[select.selectedIndex].text;
+    // Load the innertext
+    document.getElementById("event-message").innerText = "Schedule appointment with "+dr+" at "+event.start+"?";
+
+    Array.prototype.forEach.call(span, function(s){
+        s.onclick = function() {
+            modal.style.display = "none";
+        }}
+    );
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(click) {
+        if (click.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+    document.getElementById("cancel-event-btn").onclick = function(click) {
+        modal.style.display = "none";
+    };
+
+    modal.style.display = "block";
 }
 
 function populateProviderDropdown(){
