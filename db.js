@@ -1,6 +1,6 @@
 
-//const api_url = "https://dr-appointment-app.herokuapp.com/api/";
-const api_url = "http://localhost:8080/api/";
+const api_url = "https://dr-appointment-app.herokuapp.com/api/";
+//const api_url = "http://localhost:8080/api/";
 
 
 function getUser(username, callback) {
