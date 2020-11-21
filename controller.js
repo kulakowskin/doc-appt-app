@@ -1,3 +1,16 @@
+var API_KEY = "S8O5d3ULT1SUU7KF4kMT3w";
+
+/**
+ * NEVER PUT YOUR ACTUAL API SECRET IN CLIENT SIDE CODE, THIS IS JUST FOR QUICK PROTOTYPING
+ * The below generateSignature should be done server side as not to expose your api secret in public
+ * You can find an eaxmple in here: https://marketplace.zoom.us/docs/sdk/native-sdks/web/essential/signature
+ */
+var API_SECRET = "uuRn3o2sDIpPBxFh1tAHRaq3frUrDhfC4zoe";
+
+var currentUser = "";
+var events = [];
+
+
 function combineCalendars(){
     getProviderCalendar(function(p_events){
         getUserCalendar(function(u_events){
@@ -20,10 +33,13 @@ function makeActive(tab_name, element) {
         jQuery("#tab").load(tab_name, function() {
             if(tab_name === "schedule.html") {
                 getUserCalendar( function(u_events){
-                    loadCalendar(u_events)
+                    loadCalendar(u_events);
                 });
 
                 populateProviderDropdown();
+            }
+            else if(tab_name === "ViewAppointments.html"){
+                populateAppointmentTable();
             }
         });
 
@@ -31,41 +47,44 @@ function makeActive(tab_name, element) {
 
 }
 
-var currentUser = "";
-var events = [];
-
 //loggedin or loggedout
 function setCookie(user) {
     document.cookie = "user="+user+";";
 }
 
-function getCookie(){
-    var c = document.cookie;
-    return c.substring("user=".length,c.length);
+function getCookie(name){
+    name = name+"=";
+    var ret = null;
+    var cookies = document.cookie.split("; ");
+    cookies.forEach(c => {
+        if (c.includes(name)){
+            console.log(c.substring(name.length,c.length));
+            ret = c.substring(name.length,c.length);
+        }
+    });
+    return ret;
 }
 
-if(isLoggedIn()){
+if(isLoggedIn() === null){
+    console.log("user not logged in");
+    jQuery(document).ready(function(){
+        jQuery("#tab").load("signin.html");
+    });
+}
+else {
     jQuery(document).ready(function(){
         makeActive("schedule.html",document.getElementById("scheduletab"));
         let elems = document.getElementsByClassName("loggedin");
         for(var i=0;i<elems.length; i++)
         {
-                elems[i].style.display = "block";
+            elems[i].style.display = "block";
         }
-    });
-
-}
-else {
-    jQuery(document).ready(function(){
-        jQuery("#tab").load("signin.html");
     });
 }
 
 function isLoggedIn() {
-    var res = !(document.cookie === "user=");
-    currentUser = getCookie();
-    console.log("cookie: ",currentUser);
-    return res;
+    currentUser = getCookie("user");
+    return currentUser;
 }
 
 function createAccount(){
@@ -175,7 +194,8 @@ function loadEventModal(event){
         updateUserSchedule(currentUser, event, dr.value);
         updateUserSchedule(dr.value, event, currentUser);
         modal.style.display = "none";
-        combineCalendars();
+        //combineCalendars();
+        makeActive('ViewAppointments.html',document.getElementById("appointmenttab"))
     };
 
     // When the user clicks anywhere outside of the modal, close it
@@ -241,3 +261,62 @@ function getUserCalendar(callback){
         });
     });
 }
+
+function populateAppointmentTable(){
+    var tableElem = document.getElementById("appttable");
+    getUser(currentUser, function(user){
+        getSchedule(user.scheduleid, function(sched){
+            sched.appointments.forEach(a => {
+                tableElem.innerHTML += "<tr><td>"+new Date(a.date)+"</td><td>"+a.with+"</td><td><button class=\"join_meeting\">Join Meeting</button></td></tr>"
+            });
+            loadMeetingButton();
+        })
+    })
+}
+
+function loadMeetingButton() {
+// click join meeting button
+    let meetbtns = document.getElementsByClassName("join_meeting");
+    Array.prototype.forEach.call(meetbtns, function(b){
+        b.addEventListener("click", function (e) {
+            e.preventDefault();
+            document.getElementById("zmmtg-root").style.display = "block";
+            var signature = ZoomMtg.generateSignature({
+                meetingNumber: 87451755850,
+                apiKey: API_KEY,
+                apiSecret: API_SECRET,
+                role: 0,
+                success: function (res) {
+                    var joinUrl = "https://us05web.zoom.us/j/81067912114?pwd=bmNwUVk3T25GQlduNWk3aEZOdThnZz09";
+                    ZoomMtg.init({
+                        leaveUrl: "https://dr-appointment-app.herokuapp.com",
+                        isSupportAV: true,
+                        success: function () {
+                            ZoomMtg.join({
+                                signature: res.result,
+                                apiKey: API_KEY,
+                                meetingNumber: 87451755850,
+                                userName: currentUser,
+                                // password optional; set by Host
+                                passWord: "D3btQr",
+                                error(result) {
+                                    console.log(result)
+                                }
+                            })
+                        }
+                    })
+                },
+            });
+        });
+    })
+}
+
+
+jQuery(document).ready(function()
+{
+    console.log('checkSystemRequirements');
+    console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
+    ZoomMtg.setZoomJSLib('https://source.zoom.us/1.8.3/lib', '/av');
+    ZoomMtg.preLoadWasm();
+    ZoomMtg.prepareJssdk();
+});

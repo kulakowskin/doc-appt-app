@@ -1,4 +1,5 @@
 const db = require("../models");
+const axios = require('axios');
 const Schedule = db.schedules;
 
 // Create and Save a new Schedule
@@ -78,6 +79,88 @@ exports.findAppointmentById = (req, res) => {
             }
         })
         .catch(err => {
+            res
+                .status(500)
+                .send({ message: "Error retrieving schedule with id=" + id });
+        });
+};
+
+exports.updateAppointment = (req, res) => {
+    const id = req.params.id;
+    const apptid = req.body.param.apptid;
+
+    if (!req.body) {
+        return res.status(400).send({
+            message: "Data to update can not be empty!"
+        });
+    }
+
+    Schedule.findById(id)
+        .then(sched => {
+
+            if (!sched)
+                res.status(404).send({ message: "No Schedule found with id " + id });
+            else {
+                var idx = sched.appointments.findIndex(a => apptid.normalize() === a._id.toString());
+                if (idx === -1){
+                    idx = sched.appointments.length;
+                }
+                // var idx = sched.appointments.find(function(a, i) {
+                //     if (apptid.normalize() === a._id.toString()) {
+                //         console.log(a._id.toString());
+                //         return i;
+                //     }
+                // });
+
+                axios({
+                    method: 'post',
+                    url: "https://api.zoom.us/v2/users/kulakowskin0408%40gmail.com/meetings",
+                    headers: {
+                        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6IlM4TzVkM1VMVDFTVVU3S0Y0a01UM3ciLCJleHAiOjE2MDk0NDE1NjAsImlhdCI6MTYwNTk4MDIwOX0.ClT_V7-7_wXRT61nNb69G1SNoy-Fyyk0e794bYB3C3c"
+                    },
+                    data: {
+                        "topic": req.body.sched.appointments[idx].with,
+                        "type": "2",
+                        "start_time": req.body.sched.appointments[idx].date,
+                        "duration": "30",
+                        "timezone": "America/New_York",
+                        "agenda": "",
+                        "settings": {
+                            "join_before_host": true,
+                            "approval_type": 0,
+                            "waiting_room": false
+                        }
+                    }
+                })
+                    .then(function (mtgBody) {
+
+                        req.body.sched.appointments[idx].zoom.apiKey = "S8O5d3ULT1SUU7KF4kMT3w";
+                        req.body.sched.appointments[idx].zoom.apiSecret = "uuRn3o2sDIpPBxFh1tAHRaq3frUrDhfC4zoe";
+                        req.body.sched.appointments[idx].zoom.meetingNumber = mtgBody.data.id;
+                        req.body.sched.appointments[idx].zoom.password = mtgBody.data.password;
+
+                        Schedule.findByIdAndUpdate(id, req.body.sched, {useFindAndModify: true})
+                            .then(data => {
+                                if (!data) {
+                                    res.status(404).send({
+                                        message: `Cannot update Schedule with id=${id}. Maybe schedule was not found!`
+                                    });
+                                } else res.send({message: "Schedule was updated successfully."});
+                            })
+                            .catch(err => {
+                                res.status(500).send({
+                                    message: "Error updating Schedule with id=" + id
+                                });
+                            });
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
+        })
+        .catch(err => {
+            console.log(err);
             res
                 .status(500)
                 .send({ message: "Error retrieving schedule with id=" + id });

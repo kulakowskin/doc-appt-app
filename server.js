@@ -15,7 +15,7 @@ var port = process.env.PORT || 8080;
 // var __dirname = path.resolve();
 app.use(express.static(__dirname));
 
-console.log("dirname: ", __dirname)
+console.log("dirname: ", __dirname);
 
 // routes
 app.get("/", function(req,res){

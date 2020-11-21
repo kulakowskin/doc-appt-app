@@ -13,9 +13,15 @@
     "express-openid-connect": "^2.0.0",
     "fullcalendar": "^5.4.0",
     "fullcalendar-scheduler": "^5.4.0",
-    "jquery": "^3.5.1",
+    "jquery": "^3.4.1",
+    "lodash": "^4.17.14",
     "mongodb": "^3.6.3",
-    "mongoose": "^5.10.14"
+    "mongoose": "^5.10.14",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-redux": "7.1.0",
+    "redux": "3.7.2",
+    "redux-thunk": "2.2.0"
   },
   "authoer": "Nicole Kulakowski",
   "engines": {

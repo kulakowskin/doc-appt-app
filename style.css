@@ -117,3 +117,21 @@ h1{
     text-decoration: none;
     cursor: pointer;
 }
+
+#appttable {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    padding: 30px;
+    margin: 30px;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#zmmtg-root {
+    display: none;
+}

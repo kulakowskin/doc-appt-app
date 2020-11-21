@@ -27,7 +27,9 @@ exports.create = (req, res) => {
                 appts.push(
                     {
                         date: date,
-                        with: ""
+                        with: "",
+                        zoom: {
+                        }
                     });
             }
         }

@@ -1,6 +1,6 @@
 
-const api_url = "https://dr-appointment-app.herokuapp.com/api/";
-//const api_url = "http://localhost:8080/api/";
+//const api_url = "https://dr-appointment-app.herokuapp.com/api/";
+const api_url = "http://localhost:8080/api/";
 
 
 function getUser(username, callback) {
@@ -49,28 +49,54 @@ function createUser() {
 function updateUserSchedule(email, event, meetingWith) {
     getUser(email, function(user) {
         getSchedule(user.scheduleid, function(sched) {
+
+            var id = event.extendedProps.appointment_id;
+
             // update provider appointment
             if (user.provider) {
-                var id = event.extendedProps.appointment_id;
                 var idx = sched.appointments.findIndex(a => a._id.normalize() === id.normalize());
 
                 console.log(idx);
                 sched.appointments[idx] = {
+                    _id: id,
                     date: event.start,
-                    with: meetingWith
-                }
+                    with: meetingWith,
+                    zoom: {
+                        meetingNumber: "",
+                        apiKey: "",
+                        apiSecret: "",
+                        password: ""
+                    }
+                };
             }
             // insert patient appointment
             else{
                 sched.appointments.push({
+                    _id: id,
                     date: event.start,
-                    with: meetingWith
-                })
+                    with: meetingWith,
+                    zoom: {
+                        meetingNumber: "",
+                        apiKey: "",
+                        apiSecret: "",
+                        password: ""
+                    }
+                });
             }
-            axios.put(api_url +"schedules/"+sched._id,sched)
+            // axios.put(api_url +"schedules/"+sched._id,sched)
+            //     .then(res => {
+            //         console.log(res.data);
+            //     })
+
+            var param = { apptid : id};
+            axios.put(api_url +"schedules/"+sched._id, {sched: sched, param})
                 .then(res => {
                     console.log(res.data);
                 })
+                .catch(err => {
+                    console.log(err);
+                })
+
         });
     })
 }

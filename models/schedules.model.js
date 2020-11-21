@@ -1,3 +1,4 @@
+
 module.exports = mongoose => {
     const Schedules = mongoose.model(
         "schedules",
@@ -6,7 +7,13 @@ module.exports = mongoose => {
                 appointments: [
                     {
                         date: Date,
-                        with: String
+                        with: String,
+                        zoom: {
+                            meetingNumber: String,
+                            apiKey: String,
+                            apiSecret: String,
+                            password: String
+                        }
                     },
                 ]
             },
