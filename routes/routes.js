@@ -12,6 +12,7 @@ module.exports = app => {
 
     router.get("/schedules", schedules.findAll);
     router.get("/schedules/:id", schedules.findOne);
+    router.get("/schedules/:id/appointments/:apptid", schedules.findAppointmentById);
 
     router.get("/users/providers", users.findAllProviders);
 

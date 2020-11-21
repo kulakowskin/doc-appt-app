@@ -37,7 +37,7 @@ exports.findAll = (req, res) => {
             });
 };
 
-// Find a single User with an id
+// Find a single schedule with an id
 exports.findOne = (req, res) => {
 
         const id = req.params.id;
@@ -54,6 +54,36 @@ exports.findOne = (req, res) => {
             });
 };
 
+exports.findAppointmentById = (req, res) => {
+
+    const id = req.params.id;
+    const apptid = req.params.apptid;
+    Schedule.findById(id)
+        .then(data => {
+            if (!data)
+                res.status(404).send({ message: "No Schedule found with id " + id });
+            else {
+                console.log(data.appointments);
+                data.appointments.findById(apptid)
+                    .then(appt => {
+                        if (!appt)
+                            res.status(404).send({ message: "No Appointment found with id " + apptid });
+                        else res.send(appt).status(200);
+                    })
+                    .catch(err => {
+                        res
+                            .status(500)
+                            .send({ message: "Error retrieving appointment with id=" + apptid });
+                    });
+            }
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .send({ message: "Error retrieving schedule with id=" + id });
+        });
+};
+
 // Update a schedule by the id in the request
 exports.update = (req, res) => {
     if (!req.body) {
@@ -64,7 +94,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Schedule.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+    Schedule.findByIdAndUpdate(id, req.body, { useFindAndModify: true })
         .then(data => {
             if (!data) {
                 res.status(404).send({

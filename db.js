@@ -1,6 +1,6 @@
 
-const api_url = "https://dr-appointment-app.herokuapp.com/api/";
-//const api_url = "http://localhost:8080/api/";
+//const api_url = "https://dr-appointment-app.herokuapp.com/api/";
+const api_url = "http://localhost:8080/api/";
 
 
 function getUser(username, callback) {
@@ -37,7 +37,7 @@ function createUser() {
         first: document.getElementById("first").value,
         last: document.getElementById("last").value,
         password: document.getElementById("password").value,
-        provider: document.getElementById("provider").value
+        provider: document.getElementById("provider").checked
     };
     axios.post(api_url+"users/", user)
         .then( res => {
@@ -45,4 +45,34 @@ function createUser() {
             login();
             });
 }
+
+function updateUserSchedule(email, event, meetingWith) {
+    getUser(email, function(user) {
+        getSchedule(user.scheduleid, function(sched) {
+            // update provider appointment
+            if (user.provider) {
+                var id = event.extendedProps.appointment_id;
+                var idx = sched.appointments.findIndex(a => a._id.normalize() === id.normalize());
+
+                console.log(idx);
+                sched.appointments[idx] = {
+                    date: event.start,
+                    with: meetingWith
+                }
+            }
+            // insert patient appointment
+            else{
+                sched.appointments.push({
+                    date: event.start,
+                    with: meetingWith
+                })
+            }
+            axios.put(api_url +"schedules/"+sched._id,sched)
+                .then(res => {
+                    console.log(res.data);
+                })
+        });
+    })
+}
+
 

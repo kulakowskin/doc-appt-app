@@ -1,3 +1,10 @@
+function combineCalendars(){
+    getProviderCalendar(function(p_events){
+        getUserCalendar(function(u_events){
+            loadCalendar(p_events.concat(u_events));
+        })
+    })
+}
 
 function makeActive(tab_name, element) {
     try
@@ -12,7 +19,10 @@ function makeActive(tab_name, element) {
     jQuery(document).ready(function () {
         jQuery("#tab").load(tab_name, function() {
             if(tab_name === "schedule.html") {
-                loadCalendar(events);
+                getUserCalendar( function(u_events){
+                    loadCalendar(u_events)
+                });
+
                 populateProviderDropdown();
             }
         });
@@ -30,7 +40,8 @@ function setCookie(user) {
 }
 
 function getCookie(){
-    return !(document.cookie === "user=");
+    var c = document.cookie;
+    return c.substring("user=".length,c.length);
 }
 
 if(isLoggedIn()){
@@ -51,8 +62,9 @@ else {
 }
 
 function isLoggedIn() {
-    var res = getCookie();
-    console.log("cookie: ",res);
+    var res = !(document.cookie === "user=");
+    currentUser = getCookie();
+    console.log("cookie: ",currentUser);
     return res;
 }
 
@@ -103,6 +115,7 @@ async function verifyPassword(username, pword, callback) {
 
 function logout() {
     setCookie("");
+    currentUser = "";
     jQuery(document).ready(function(){
         jQuery("#tab").load("signin.html");
         let elems = document.getElementsByClassName("loggedin");
@@ -113,14 +126,14 @@ function logout() {
     });
 }
 
-function loadCalendar(events) {
+function loadCalendar(event_arr) {
     var calendarEl = document.getElementById("calendar");
     var calendar = new FullCalendar.Calendar(calendarEl,
         {
             timezone: 'local',
-            events: events,
-            color: 'lightBlue',
+            events: event_arr,
             textColor: 'gray',
+            eventDisplay: 'block',
             header: {
             left: 'title',
                 center: '',
@@ -132,15 +145,13 @@ function loadCalendar(events) {
             },
             schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
             initialView: 'dayGridMonth',
-            eventClick: function(info) {
-                info.jsEvent.preventDefault();
-                loadEventModal(info.event);
-                // alert('Clicked on: ' + info.dateStr);
-                // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-                // alert('Current view: ' + info.view.type);
-                // // change the day's background color just for fun
-                // info.dayEl.style.backgroundColor = 'red';
+            eventClick: function(info) { // TODO don't make event clickable unless it's available
+                if(info.event.title === "Available") {
+                    info.jsEvent.preventDefault();
+                    loadEventModal(info.event);
+                }
             }
+
         }).render();
 }
 
@@ -150,15 +161,22 @@ function loadEventModal(event){
     var span = document.getElementsByClassName("close");
 
     var select = document.getElementById("doctors");
-    var dr = select.options[select.selectedIndex].text;
+    var dr = select.options[select.selectedIndex];
     // Load the innertext
-    document.getElementById("event-message").innerText = "Schedule appointment with "+dr+" at "+event.start+"?";
+    document.getElementById("event-message").innerText = "Schedule appointment with "+dr.text+" at "+event.start+"?";
 
     Array.prototype.forEach.call(span, function(s){
         s.onclick = function() {
             modal.style.display = "none";
         }}
     );
+
+    document.getElementById("confirm-event-btn").onclick =  function() {
+        updateUserSchedule(currentUser, event, dr.value);
+        updateUserSchedule(dr.value, event, currentUser);
+        modal.style.display = "none";
+        combineCalendars();
+    };
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(click) {
@@ -181,20 +199,45 @@ function populateProviderDropdown(){
     });
 }
 
-function pullProviderCalendar(){
+function getProviderCalendar(callback){
 
     var p_events = [];
     var p_email = document.getElementById("doctors").value;
     getUser(p_email, function(user){
         getSchedule(user.scheduleid, function(sched) {
             sched.appointments.forEach(a => {
-                p_events.push({
-                    title: 'Available',
-                    start: new Date(a.date)
-                })
+                if (a.with === "") {
+                    p_events.push({
+                        title: 'Available',
+                        start: new Date(a.date),
+                        color: '#6d9ab3',
+                        appointment_id: a._id
+                    });
+                }
             });
-            loadCalendar(p_events);
+            callback(p_events);
         });
     });
+}
 
+function getUserCalendar(callback){
+    var u_events = [];
+    getUser(currentUser, function(user){
+        getSchedule(user.scheduleid, function(sched) {
+            sched.appointments.forEach(a => {
+                u_events.push({
+                        title: a.with,
+                        start: new Date(a.date),
+                        color: '#4f7850',
+                        appointment_id: a._id,
+                        eventRender: function (color, element) {
+                            if (color) {
+                                element.css('background-color', color)
+                            }
+                        }
+                 });
+            });
+            callback(u_events);
+        });
+    });
 }
