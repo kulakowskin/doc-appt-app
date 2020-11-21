@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="632d507f-3d68-4ce7-a220-fba2f9d27427" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Account.html" beforeDir="false" afterPath="$PROJECT_DIR$/Account.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/schedules.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/schedules.controller.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/db.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule.html" beforeDir="false" afterPath="$PROJECT_DIR$/schedule.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -63,7 +57,7 @@
         <counts>
           <entry key="css" value="182" />
           <entry key="html" value="1672" />
-          <entry key="js" value="9216" />
+          <entry key="js" value="9218" />
           <entry key="json" value="45" />
           <entry key="md" value="1" />
           <entry key="mjs" value="238" />
@@ -75,7 +69,7 @@
           <entry key="ECMAScript 6" value="238" />
           <entry key="HTML" value="1672" />
           <entry key="JSON" value="45" />
-          <entry key="JavaScript" value="9216" />
+          <entry key="JavaScript" value="9218" />
           <entry key="Markdown" value="1" />
         </counts>
       </usages-collector>
@@ -97,11 +91,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="174" column="57" lean-forward="true" selection-start-line="174" selection-start-column="57" selection-end-line="174" selection-end-column="57" />
+            <state relative-caret-position="166">
+              <caret line="171" column="6" lean-forward="true" selection-start-line="171" selection-start-column="6" selection-end-line="171" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -115,11 +109,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/db.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="706">
-              <caret line="59" column="37" lean-forward="true" selection-start-line="59" selection-start-column="37" selection-end-line="59" selection-end-column="37" />
+            <state relative-caret-position="15">
+              <caret line="1" selection-start-line="1" selection-end-line="1" />
             </state>
           </provider>
         </entry>
@@ -187,6 +181,7 @@
       <find>foreach</find>
       <find>loadProCalen</find>
       <find>loadCalen</find>
+      <find>backgr</find>
     </findStrings>
     <replaceStrings>
       <replace>AppointmentMaker</replace>
@@ -220,9 +215,9 @@
         <option value="$PROJECT_DIR$/Account.html" />
         <option value="$PROJECT_DIR$/controllers/schedules.controller.js" />
         <option value="$PROJECT_DIR$/routes/routes.js" />
-        <option value="$PROJECT_DIR$/db.js" />
         <option value="$PROJECT_DIR$/schedule.html" />
         <option value="$PROJECT_DIR$/controller.js" />
+        <option value="$PROJECT_DIR$/db.js" />
       </list>
     </option>
   </component>
@@ -331,12 +326,12 @@
       <workItem from="1604758589443" duration="13473000" />
       <workItem from="1604962525859" duration="32831000" />
       <workItem from="1605386844535" duration="31737000" />
-      <workItem from="1605792405484" duration="11411000" />
+      <workItem from="1605792405484" duration="11529000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="94605000" />
+    <option name="totallyTimeSpent" value="94723000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="126" y="23" width="1388" height="883" extended-state="0" />
@@ -582,17 +577,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db.js">
+    <entry file="file://$PROJECT_DIR$/controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="706">
-          <caret line="59" column="37" lean-forward="true" selection-start-line="59" selection-start-column="37" selection-end-line="59" selection-end-column="37" />
+        <state relative-caret-position="166">
+          <caret line="171" column="6" lean-forward="true" selection-start-line="171" selection-start-column="6" selection-end-line="171" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controller.js">
+    <entry file="file://$PROJECT_DIR$/db.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="174" column="57" lean-forward="true" selection-start-line="174" selection-start-column="57" selection-end-line="174" selection-end-column="57" />
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
