@@ -266,55 +266,50 @@ function populateAppointmentTable(){
     var tableElem = document.getElementById("appttable");
     getUser(currentUser, function(user){
         getSchedule(user.scheduleid, function(sched){
-            sched.appointments.forEach(a => {
-                tableElem.innerHTML += "<tr><td>"+new Date(a.date)+"</td><td>"+a.with+"</td><td><button class=\"join_meeting\">Join Meeting</button></td></tr>"
+            sched.appointments.forEach(function iterate(a, i) {
+                tableElem.innerHTML += "<tr><td>"+new Date(a.date)+"</td><td>"+a.with+"</td><td><button id=\"mtg-btn-"+i+"\" class=\"join_meeting\">Join Meeting</button></td></tr>"
+                loadMeetingButton(a,i);
             });
-            loadMeetingButton();
         })
     })
 }
 
-function loadMeetingButton() {
-// click join meeting button
-    let meetbtns = document.getElementsByClassName("join_meeting");
-    Array.prototype.forEach.call(meetbtns, function(b){
-        b.addEventListener("click", function (e) {
-            e.preventDefault();
-            document.getElementById("zmmtg-root").style.display = "block";
-            var signature = ZoomMtg.generateSignature({
-                meetingNumber: 87451755850,
-                apiKey: API_KEY,
-                apiSecret: API_SECRET,
-                role: 0,
-                success: function (res) {
-                    var joinUrl = "https://us05web.zoom.us/j/81067912114?pwd=bmNwUVk3T25GQlduNWk3aEZOdThnZz09";
-                    ZoomMtg.init({
-                        leaveUrl: "https://dr-appointment-app.herokuapp.com",
-                        isSupportAV: true,
-                        success: function () {
-                            ZoomMtg.join({
-                                signature: res.result,
-                                apiKey: API_KEY,
-                                meetingNumber: 87451755850,
-                                userName: currentUser,
-                                // password optional; set by Host
-                                passWord: "D3btQr",
-                                error(result) {
-                                    console.log(result)
-                                }
-                            })
-                        }
-                    })
-                },
-            });
+function loadMeetingButton(appt, btnidx) {
+    // click join meeting button
+    let meetbtn = document.getElementById("mtg-btn-"+btnidx);
+    meetbtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        var signature = ZoomMtg.generateSignature({
+            meetingNumber: appt.zoom.meetingNumber,
+            apiKey: appt.zoom.apiKey,
+            apiSecret: appt.zoom.apiSecret,
+            role: 0,
+            success: function (res) {
+                ZoomMtg.init({
+                    leaveUrl: "https://dr-appointment-app.herokuapp.com",
+                    isSupportAV: true,
+                    success: function () {
+                        ZoomMtg.join({
+                            signature: res.result,
+                            apiKey: appt.zoom.apiKey,
+                            meetingNumber: appt.zoom.meetingNumber,
+                            userName: currentUser,
+                            passWord: appt.zoom.password,
+                            error(result) {
+                                console.log(result)
+                            }
+                        })
+                    }
+                })
+            },
         });
-    })
+        document.getElementById("zmmtg-root").style.display = "block";
+    });
 }
 
 
 jQuery(document).ready(function()
 {
-    console.log('checkSystemRequirements');
     console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
     ZoomMtg.setZoomJSLib('https://source.zoom.us/1.8.3/lib', '/av');
     ZoomMtg.preLoadWasm();

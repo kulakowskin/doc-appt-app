@@ -83,10 +83,6 @@ function updateUserSchedule(email, event, meetingWith) {
                     }
                 });
             }
-            // axios.put(api_url +"schedules/"+sched._id,sched)
-            //     .then(res => {
-            //         console.log(res.data);
-            //     })
 
             var param = { apptid : id};
             axios.put(api_url +"schedules/"+sched._id, {sched: sched, param})

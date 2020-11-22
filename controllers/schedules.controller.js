@@ -97,7 +97,6 @@ exports.updateAppointment = (req, res) => {
 
     Schedule.findById(id)
         .then(sched => {
-
             if (!sched)
                 res.status(404).send({ message: "No Schedule found with id " + id });
             else {
@@ -105,12 +104,6 @@ exports.updateAppointment = (req, res) => {
                 if (idx === -1){
                     idx = sched.appointments.length;
                 }
-                // var idx = sched.appointments.find(function(a, i) {
-                //     if (apptid.normalize() === a._id.toString()) {
-                //         console.log(a._id.toString());
-                //         return i;
-                //     }
-                // });
 
                 axios({
                     method: 'post',
