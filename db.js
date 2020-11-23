@@ -7,7 +7,7 @@ function getUser(username, callback) {
     axios.get(api_url+"users/"+encodeURIComponent(username))
         .then(res => {
             const user = res.data;
-            console.log(res.data);
+            //console.log(res.data);
             callback(user);
         });
 }
@@ -16,7 +16,7 @@ function getSchedule(id, callback) {
     axios.get(api_url+"schedules/"+id)
         .then(res => {
             const schedule = res.data;
-            console.log(res.data);
+            //console.log(res.data);
             callback(schedule);
         });
 }
@@ -46,54 +46,62 @@ function createUser() {
             });
 }
 
-function updateUserSchedule(email, event, meetingWith, callback) {
-    getUser(email, function(user) {
+function updatePatientProviderSchedule(patient, event, provider, callback) {
+    getUser(patient, function(user) {
         getSchedule(user.scheduleid, function(sched) {
-
             var id = event.extendedProps.appointment_id;
-
-            // update provider appointment
-            if (user.provider) {
-                var idx = sched.appointments.findIndex(a => a._id.normalize() === id.normalize());
-
-                console.log(idx);
-                sched.appointments[idx] = {
-                    _id: id,
-                    date: event.start,
-                    with: meetingWith,
-                    zoom: {
-                        meetingNumber: "",
-                        apiKey: "",
-                        apiSecret: "",
-                        password: ""
-                    }
-                };
-            }
-            // insert patient appointment
-            else{
-                sched.appointments.push({
-                    _id: id,
-                    date: event.start,
-                    with: meetingWith,
-                    zoom: {
-                        meetingNumber: "",
-                        apiKey: "",
-                        apiSecret: "",
-                        password: ""
-                    }
-                });
-            }
-
             var param = { apptid : id};
-            axios.put(api_url +"schedules/"+sched._id, {sched: sched, param})
+            // insert patient appointment
+            sched.appointments.push({
+                _id: id,
+                date: event.start,
+                with: provider,
+                zoom: {
+                    meetingNumber: "",
+                    apiKey: "",
+                    apiSecret: "",
+                    password: ""
+                }
+            });
+
+            axios.put(api_url +"schedules/zoom/"+sched._id, {sched: sched, param})
                 .then(res => {
-                    console.log(res.data);
+                    console.log("Updated patient schedule: ",res.data);
+                    getUser(provider, function(p){
+                        getSchedule(p.scheduleid, function(psched){
+                            // update provider appointment
+                            var idx = psched.appointments.findIndex(a => a._id.normalize() === id.normalize());
+                            var patient_i = res.data.appointments.findIndex(a => a._id.normalize() === id.normalize());
+                            var patient_sched = res.data.appointments[patient_i];
+                            console.log("appt id: ",id);
+                            console.log("patient_idx: ",patient_i);
+                            psched.appointments[idx] = {
+                                _id: id,
+                                date: event.start,
+                                with: patient,
+                                zoom: {
+                                    meetingNumber: patient_sched.zoom.meetingNumber,
+                                    apiKey: patient_sched.zoom.apiKey,
+                                    apiSecret: patient_sched.zoom.apiSecret,
+                                    password: patient_sched.zoom.password
+                                }
+                            };
+
+                            axios.put(api_url +"schedules/"+psched._id, psched)
+                                .then(res => {
+                                    console.log("Updated provider schedule: ",res.data);
+                                    callback();
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        })
+                    });
+
                 })
                 .catch(err => {
                     console.log(err);
                 });
-
-            callback();
 
         });
     })

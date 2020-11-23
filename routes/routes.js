@@ -18,8 +18,8 @@ module.exports = app => {
 
     router.get("/users/:username", users.findOne);
 
-    //router.put("/schedules/:id", schedules.update);
-    router.put("/schedules/:id", schedules.updateAppointment);
+    router.put("/schedules/:id", schedules.update);
+    router.put("/schedules/zoom/:id", schedules.createZoomMeeting);
 
     // router.delete("/:id", tutorials.delete);
     //

@@ -200,8 +200,8 @@ function loadEventModal(event){
     );
 
     document.getElementById("confirm-event-btn").onclick =  function() {
-        updateUserSchedule(dr.value, event, currentUser.username);
-        updateUserSchedule(currentUser.username, event, dr.value, function() {
+        // updateSchedule(dr.value, event, currentUser.username);
+        updatePatientProviderSchedule(currentUser.username, event, dr.value, function() {
             makeActive('ViewAppointments.html',document.getElementById("appointmenttab"));
         });
 
@@ -252,47 +252,43 @@ function getProviderCalendar(callback){
 
 function getUserCalendar(callback){
     var u_events = [];
-    // getUser(currentUser, function(user){
-        getSchedule(currentUser.scheduleid, function(sched) {
-            sched.appointments.forEach(a => {
-                getUser(a.with, function(dr) {
-                    u_events.push({
-                        title: "Dr. "+dr.last,
-                        start: new Date(a.date),
-                        color: '#4f7850',
-                        appointment_id: a._id,
-                        eventRender: function (color, element) {
-                            if (color) {
-                                element.css('background-color', color)
-                            }
+    getSchedule(currentUser.scheduleid, function(sched) {
+        sched.appointments.forEach(a => {
+            getUser(a.with, function(dr) {
+                u_events.push({
+                    title: "Dr. "+dr.last,
+                    start: new Date(a.date),
+                    color: '#4f7850',
+                    appointment_id: a._id,
+                    eventRender: function (color, element) {
+                        if (color) {
+                            element.css('background-color', color)
                         }
-                    });
-                    callback(u_events);
+                    }
                 });
+                callback(u_events);
             });
         });
-    // });
+    });
 }
 
 function populateAppointmentTable(){
     var tableElem = document.getElementById("appttable");
-    // getUser(currentUser, function(user){
-        getSchedule(currentUser.scheduleid, function(sched){
-            sched.appointments.forEach(function iterate(a, i) {
-                if(a.with !== "") {
-                    getUser(a.with, function (dr) {
-                        var name = dr.first + " " + dr.last;
-                        if (dr.provider) {
-                            name = "Dr. " + dr.last;
-                        }
-                        tableElem.innerHTML += "<tr><td>" + new Date(a.date) + "</td><td>" + name + "</td><td><button id=\"mtg-btn-" + i + "\" class=\"join_meeting\">Join Meeting</button></td></tr>"
-                        loadMeetingButton(a, i);
-                    });
-                }
+    getSchedule(currentUser.scheduleid, function(sched){
+        sched.appointments.forEach(function iterate(a, i) {
+            if(a.with !== "") {
+                getUser(a.with, function (dr) {
+                    var name = dr.first + " " + dr.last;
+                    if (dr.provider) {
+                        name = "Dr. " + dr.last;
+                    }
+                    tableElem.innerHTML += "<tr><td>" + new Date(a.date) + "</td><td>" + name + "</td><td><button id=\"mtg-btn-" + i + "\" class=\"join_meeting\">Join Meeting</button></td></tr>"
+                    loadMeetingButton(a, i);
+                });
+            }
 
-            });
-        })
-    // })
+        });
+    })
 }
 
 function loadMeetingButton(appt, btnidx) {

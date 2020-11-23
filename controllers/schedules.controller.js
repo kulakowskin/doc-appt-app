@@ -85,7 +85,7 @@ exports.findAppointmentById = (req, res) => {
         });
 };
 
-exports.updateAppointment = (req, res) => {
+exports.createZoomMeeting = (req, res) => {
     const id = req.params.id;
     const apptid = req.body.param.apptid;
 
@@ -132,13 +132,13 @@ exports.updateAppointment = (req, res) => {
                         req.body.sched.appointments[idx].zoom.meetingNumber = mtgBody.data.id;
                         req.body.sched.appointments[idx].zoom.password = mtgBody.data.password;
 
-                        Schedule.findByIdAndUpdate(id, req.body.sched, {useFindAndModify: true})
+                        Schedule.findByIdAndUpdate(id, req.body.sched, {useFindAndModify: true, new: true})
                             .then(data => {
                                 if (!data) {
                                     res.status(404).send({
                                         message: `Cannot update Schedule with id=${id}. Maybe schedule was not found!`
                                     });
-                                } else res.send({message: "Schedule was updated successfully."});
+                                } else res.send(data);
                             })
                             .catch(err => {
                                 res.status(500).send({
@@ -156,7 +156,7 @@ exports.updateAppointment = (req, res) => {
             console.log(err);
             res
                 .status(500)
-                .send({ message: "Error retrieving schedule with id=" + id });
+                .send({ message: "Error retrieving schedule with id=" + id});
         });
 };
 
