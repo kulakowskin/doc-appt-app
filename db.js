@@ -46,7 +46,7 @@ function createUser() {
             });
 }
 
-function updateUserSchedule(email, event, meetingWith) {
+function updateUserSchedule(email, event, meetingWith, callback) {
     getUser(email, function(user) {
         getSchedule(user.scheduleid, function(sched) {
 
@@ -91,7 +91,9 @@ function updateUserSchedule(email, event, meetingWith) {
                 })
                 .catch(err => {
                     console.log(err);
-                })
+                });
+
+            callback();
 
         });
     })

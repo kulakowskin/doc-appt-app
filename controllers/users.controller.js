@@ -2,7 +2,7 @@ const db = require("../models");
 const User = db.users;
 const Schedule = db.schedules;
 
-// Create and Save a new Tutorial
+// Create and Save a new User
 exports.create = (req, res) => {
     // Validate request
     if (!req.body.username) {
@@ -16,19 +16,29 @@ exports.create = (req, res) => {
     var today = new Date();
     today.setMinutes(0);
     today.setSeconds(0);
-    var date = today;
 
     if(isProvider){
         // Create a business day schedule for providers
-        for(var i = 0; i<31;i++){  // Can schedule appt over next 30 days
+        for(var i = 1; i<30;i++){  // Can schedule appt over next 30 days
             for(var j = 9; j<17; j++) {  // Hours 9-4
-                date = new Date(date.setDate(today.getDate() + i));
-                date.setHours(j);
+                var temp = new Date(today);
+                temp = new Date(temp.setDate(today.getDate() + i));
+
+                // Skip Saturdays and Sundays
+                if(temp.getDay() === 0 || temp.getDay() === 6){
+                    continue;
+                }
+                temp.setHours(j);
+
                 appts.push(
                     {
-                        date: date,
+                        date: temp,
                         with: "",
                         zoom: {
+                            meetingNumber: "",
+                            apiKey: "",
+                            apiSecret: "",
+                            password: ""
                         }
                     });
             }

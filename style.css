@@ -1,39 +1,5 @@
-h1{
-    font-weight: bolder;
-    border-bottom-style: solid;
-    border-bottom-color: orange;
-    border-bottom-width: thick;
-    padding: 0px 20px;
-    color: whitesmoke;
-}
-
-.container {
-    margin-top: 5px;
-    margin-bottom: auto;
-    width: 800px;
-    height: 500px;
-    border: 1px solid #1447c8;
-    border-radius: 15px ;
-    padding: 0px 15px;
-    background-color: #043153;
-    border: 2px solid black;
-}
-
-.row {
-    margin: 0px;
-}
-
-.right-side {
-    width: auto;
-    margin: 5% auto;
-    font-size: 18px;
-    color: black;
-    float: top;
-}
-.left-side {
-    margin-left: 25px;
-    float: left;
-    width: 29%;
+body {
+    overflow: auto !important;
 }
 
 /* Add a black background color to the top navigation */
@@ -126,6 +92,10 @@ h1{
     margin: 30px;
 }
 
+#tab, h1, h3 {
+    margin: 20px !important;
+}
+
 td, th {
     border: 1px solid #dddddd;
     text-align: left;
@@ -134,4 +104,12 @@ td, th {
 
 #zmmtg-root {
     display: none;
+}
+
+button {
+    padding: 1px 6px !important;
+    /*border: solid;*/
+    background: lightsteelblue !important;
+    border: 1px outset black !important;
+    border-image: initial !important;
 }
