@@ -72,11 +72,18 @@ else {
         currentUser = user;
         document.getElementById("welcome").innerText = "Welcome "+currentUser.first+" "+currentUser.last+"!";
         jQuery(document).ready(function(){
-            makeActive("schedule.html",document.getElementById("scheduletab"));
-            let elems = document.getElementsByClassName("loggedin");
-            for(var i=0;i<elems.length; i++)
-            {
-                elems[i].style.display = "block";
+            if(currentUser.provider){
+                makeActive("ViewAppointments.html",document.getElementById("appointmenttab"));
+                document.getElementById("appointmenttab").style.display = "block";
+                document.getElementById("logoutbtn").style.display = "block";
+            }
+            else{
+                makeActive("schedule.html",document.getElementById("scheduletab"));
+                let elems = document.getElementsByClassName("loggedin");
+                for(var i=0;i<elems.length; i++)
+                {
+                    elems[i].style.display = "block";
+                }
             }
         });
     });
@@ -272,14 +279,16 @@ function populateAppointmentTable(){
     // getUser(currentUser, function(user){
         getSchedule(currentUser.scheduleid, function(sched){
             sched.appointments.forEach(function iterate(a, i) {
-                getUser(a.with, function(dr){
-                    var name = dr.first+" "+dr.last;
-                    if(dr.provider){
-                        name = "Dr. "+dr.last;
-                    }
-                    tableElem.innerHTML += "<tr><td>"+new Date(a.date)+"</td><td>"+name+"</td><td><button id=\"mtg-btn-"+i+"\" class=\"join_meeting\">Join Meeting</button></td></tr>"
-                    loadMeetingButton(a,i);
-                });
+                if(a.with !== "") {
+                    getUser(a.with, function (dr) {
+                        var name = dr.first + " " + dr.last;
+                        if (dr.provider) {
+                            name = "Dr. " + dr.last;
+                        }
+                        tableElem.innerHTML += "<tr><td>" + new Date(a.date) + "</td><td>" + name + "</td><td><button id=\"mtg-btn-" + i + "\" class=\"join_meeting\">Join Meeting</button></td></tr>"
+                        loadMeetingButton(a, i);
+                    });
+                }
 
             });
         })

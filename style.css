@@ -13,7 +13,7 @@ body {
     float: left;
     color: #f2f2f2;
     text-align: center;
-    padding: 14px 16px;
+    padding: 14px 20px;
     text-decoration: none;
     font-size: 17px;
 }
@@ -26,7 +26,7 @@ body {
 
 /* Add a color to the active/current link */
 .topnav a.active {
-    background-color: #3264ff;
+    background-color: #6d9ab3;
     color: white;
 }
 
@@ -65,8 +65,21 @@ body {
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    width: 70%; /* Could be more or less, depending on screen size */
+    width: 60%; /* Could be more or less, depending on screen size */
     z-index: 100001 !important;
+    text-align: center;
+}
+
+#confirm-event-btn, #cancel-event-btn {
+    margin-left: 60px;
+    margin-right: 60px;
+}
+
+#confirm-event-btn {
+    background-color: #a5d9a5 !important;
+}
+#cancel-event-btn {
+    background-color: #f1a69a !important;
 }
 
 /* The Close Button */
@@ -95,6 +108,10 @@ body {
 #tab, h1, h3 {
     margin: 20px !important;
 }
+h1 {
+    color: #6d9ab3;
+    font-weight: bold;
+}
 
 td, th {
     border: 1px solid #dddddd;
@@ -109,7 +126,7 @@ td, th {
 button {
     padding: 1px 6px !important;
     /*border: solid;*/
-    background: lightsteelblue !important;
+    /*background: lightsteelblue !important;*/
     border: 1px outset black !important;
     border-image: initial !important;
 }
