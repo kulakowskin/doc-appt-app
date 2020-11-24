@@ -25,7 +25,7 @@ function getAllProviders(callback){
     axios.get(api_url+"users/providers")
         .then(res => {
             const providers = res.data;
-            console.log(providers);
+            //console.log(providers);
             callback(providers);
         });
 }

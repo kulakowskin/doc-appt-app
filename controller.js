@@ -111,13 +111,20 @@ async function login(){
         if (res){
             document.getElementById("welcome").innerText = "Welcome "+currentUser.first+" "+currentUser.last+"!";
             jQuery(document).ready(function () {
-                jQuery("#tab").load("schedule.html");
-                let elems = document.getElementsByClassName("loggedin");
-                for(var i=0;i<elems.length; i++)
-                {
-                    elems[i].style.display = "block";
+                if(currentUser.provider){
+                    makeActive("ViewAppointments.html",document.getElementById("appointmenttab"));
+                    document.getElementById("appointmenttab").style.display = "block";
+                    document.getElementById("logoutbtn").style.display = "block";
                 }
-                makeActive('schedule.html',document.getElementById("scheduletab"));
+                else{
+                    jQuery("#tab").load("schedule.html");
+                    let elems = document.getElementsByClassName("loggedin");
+                    for(var i=0;i<elems.length; i++)
+                    {
+                        elems[i].style.display = "block";
+                    }
+                    makeActive('schedule.html',document.getElementById("scheduletab"));
+                }
             });
         }
         else {
@@ -200,7 +207,6 @@ function loadEventModal(event){
     );
 
     document.getElementById("confirm-event-btn").onclick =  function() {
-        // updateSchedule(dr.value, event, currentUser.username);
         updatePatientProviderSchedule(currentUser.username, event, dr.value, function() {
             makeActive('ViewAppointments.html',document.getElementById("appointmenttab"));
         });
@@ -269,24 +275,25 @@ function getUserCalendar(callback){
                 callback(u_events);
             });
         });
+        callback(u_events);
     });
 }
 
 function populateAppointmentTable(){
     var tableElem = document.getElementById("appttable");
     getSchedule(currentUser.scheduleid, function(sched){
-        sched.appointments.forEach(function iterate(a, i) {
+        sched.appointments.forEach(function iterate(a,i) {
             if(a.with !== "") {
-                getUser(a.with, function (dr) {
+                getUser(a.with, async function (dr) {
                     var name = dr.first + " " + dr.last;
                     if (dr.provider) {
                         name = "Dr. " + dr.last;
                     }
                     tableElem.innerHTML += "<tr><td>" + new Date(a.date) + "</td><td>" + name + "</td><td><button id=\"mtg-btn-" + i + "\" class=\"join_meeting\">Join Meeting</button></td></tr>"
+                    await new Promise(r => setTimeout(r, 3000));
                     loadMeetingButton(a, i);
-                });
+                })
             }
-
         });
     })
 }
@@ -294,7 +301,8 @@ function populateAppointmentTable(){
 function loadMeetingButton(appt, btnidx) {
     // click join meeting button
     let meetbtn = document.getElementById("mtg-btn-"+btnidx);
-    meetbtn.addEventListener("click", function (e) {
+    meetbtn.addEventListener('click', function (e) {
+
         e.preventDefault();
         var signature = ZoomMtg.generateSignature({
             meetingNumber: appt.zoom.meetingNumber,
@@ -310,7 +318,7 @@ function loadMeetingButton(appt, btnidx) {
                             signature: res.result,
                             apiKey: appt.zoom.apiKey,
                             meetingNumber: appt.zoom.meetingNumber,
-                            userName: currentUser,
+                            userName: currentUser.username,
                             passWord: appt.zoom.password,
                             error(result) {
                                 console.log(result)
@@ -321,13 +329,57 @@ function loadMeetingButton(appt, btnidx) {
             },
         });
         document.getElementById("zmmtg-root").style.display = "block";
+    }, false);
+}
+
+function waitForElement(querySelector, timeout=0){
+    const startTime = new Date().getTime();
+    return new Promise((resolve, reject)=>{
+        const timer = setInterval(()=>{
+            const now = new Date().getTime();
+            if(document.querySelector(querySelector)){
+                clearInterval(timer);
+                resolve();
+            }else if(timeout && now - startTime >= timeout){
+                clearInterval(timer);
+                reject();
+            }
+        }, 100);
     });
+}
+
+function joinMtg(appt){
+    ZoomMtg.generateSignature({
+        meetingNumber: appt.zoom.meetingNumber,
+        apiKey: appt.zoom.apiKey,
+        apiSecret: appt.zoom.apiSecret,
+        role: 0,
+        success: function (res) {
+            ZoomMtg.init({
+                leaveUrl: "https://dr-appointment-app.herokuapp.com",
+                isSupportAV: true,
+                success: function () {
+                    ZoomMtg.join({
+                        signature: res.result,
+                        apiKey: appt.zoom.apiKey,
+                        meetingNumber: appt.zoom.meetingNumber,
+                        userName: currentUser,
+                        passWord: appt.zoom.password,
+                        error(result) {
+                            console.log(result)
+                        }
+                    })
+                }
+            })
+        },
+    });
+    document.getElementById("zmmtg-root").style.display = "block";
 }
 
 
 jQuery(document).ready(function()
 {
-    console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
+    //console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
     ZoomMtg.setZoomJSLib('https://source.zoom.us/1.8.3/lib', '/av');
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareJssdk();
